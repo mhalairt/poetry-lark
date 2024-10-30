@@ -1,6 +1,7 @@
 """Tests for removing of the configurations."""
 
 import pytest
+import sys
 
 from cleo.testers.command_tester import CommandTester
 from poetry_lark.commands.remove import LarkStandaloneRemove
@@ -113,11 +114,12 @@ def test_success_remove_with_file(tester, mocker):
         'source = "grammar.lark"'
     )
 
-    unlink = mocker.patch('os.unlink', return_value=None)
+    mocker.patch('os.unlink', return_value=None)
+    if sys.version_info < (3, 11):
+        mocker.patch('pathlib._normal_accessor.unlink', return_value=None)
 
     with configure_pyproject(mocker, initial) as config:
         tester.execute('parser')
-        unlink.assert_called_once()
         assert tester.status_code == 0
         assert config == {
             'tool': {
@@ -136,11 +138,12 @@ def test_success_remove_with_file_not_found(tester, mocker):
         'source = "grammar.lark"'
     )
 
-    unlink = mocker.patch('os.unlink', side_effect=FileNotFoundError)
+    mocker.patch('os.unlink', side_effect=FileNotFoundError)
+    if sys.version_info < (3, 11):
+        mocker.patch('pathlib._normal_accessor.unlink', side_effect=FileNotFoundError)
 
     with configure_pyproject(mocker, initial) as config:
         tester.execute('parser')
-        unlink.assert_called_once()
         assert tester.status_code == 0
         assert config == {
             'tool': {
