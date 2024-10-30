@@ -7,7 +7,7 @@ from tomlkit.items import Item, Table
 from tomlkit.toml_document import TOMLDocument
 from typing import NamedTuple
 
-from typing import Any, Dict, List, Literal, Optional, Self, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
 
 class Parser(NamedTuple):
@@ -68,7 +68,7 @@ class Parser(NamedTuple):
                use_bytes: Optional[bool] = None,
                use_maybe_placeholders: Optional[bool] = None,
                use_regex: Optional[bool] = None,
-               use_strict: Optional[bool] = None) -> Self:
+               use_strict: Optional[bool] = None) -> 'Parser':
         """
         Create a new instance of the parser.
 
