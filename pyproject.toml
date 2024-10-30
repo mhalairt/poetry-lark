@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "poetry-lark"
-version = "1.0.1"
+version = "1.0.2"
 description = "Plugin which integrates Lark into the Poetry build system."
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -53,6 +53,8 @@ flake8-quotes = "^3.4.0"
 [tool.flake8]
 filename = "src/**/*.py"
 max-line-length = 110
+inline-quotes = "'"
+multiline-quotes = "'''"
 
 [tool.pytest.ini_options]
 addopts = "--cov"

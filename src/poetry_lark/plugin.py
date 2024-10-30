@@ -3,6 +3,7 @@
 from cleo.events.console_command_event import ConsoleCommandEvent
 from cleo.events.console_events import COMMAND
 from cleo.events.event_dispatcher import EventDispatcher
+from functools import partial
 from poetry.console.application import Application
 from poetry.console.commands.build import BuildCommand
 from poetry.console.commands.command import Command
@@ -27,18 +28,16 @@ class LarkStandalonePlugin(ApplicationPlugin):
             LarkStandaloneRemove,
         ]
 
-    @property
-    def builder(self) -> LarkStandaloneBuild:
-        """The bulder command."""
-        return LarkStandaloneBuild(ignore_manual=True)
-
     def activate(self, application: Application) -> None:
         """Activate the plugin, registering commands and event handlers."""
-        application.event_dispatcher.add_listener(COMMAND, self.handle)
+        application.event_dispatcher.add_listener(
+            COMMAND, partial(self.handle, application=application),
+        )
         super().activate(application)
 
     def handle(self, event: ConsoleCommandEvent,
-               event_name: str, dispatcher: EventDispatcher) -> None:
+               event_name: str, dispatcher: EventDispatcher,
+               application: Application) -> None:
         """
         Handle console command events and build all relevant packages.
 
@@ -46,6 +45,7 @@ class LarkStandalonePlugin(ApplicationPlugin):
             event: The console command event.
             event_name: The name of the event being handled.
             dispatcher: The event dispatcher.
+            application: The console application.
 
         Raises:
             ValueError: If validation fails.
@@ -53,5 +53,8 @@ class LarkStandalonePlugin(ApplicationPlugin):
         if not isinstance(event.command, BuildCommand):
             return
 
-        if self.builder.handle() != 0:
+        builder = LarkStandaloneBuild(ignore_manual=True)
+        builder.set_application(application)
+
+        if builder.handle() != 0:
             event.stop_propagation()
