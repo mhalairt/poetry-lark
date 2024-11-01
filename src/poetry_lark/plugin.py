@@ -28,6 +28,13 @@ class LarkStandalonePlugin(ApplicationPlugin):
             LarkStandaloneRemove,
         ]
 
+    def create_builder(self, application: Application) -> LarkStandaloneBuild:
+        """Create a builder."""
+        builder = LarkStandaloneBuild(ignore_manual=True)
+        builder.set_application(application)
+
+        return builder
+
     def activate(self, application: Application) -> None:
         """Activate the plugin, registering commands and event handlers."""
         application.event_dispatcher.add_listener(
@@ -53,8 +60,6 @@ class LarkStandalonePlugin(ApplicationPlugin):
         if not isinstance(event.command, BuildCommand):
             return
 
-        builder = LarkStandaloneBuild(ignore_manual=True)
-        builder.set_application(application)
-
+        builder = self.create_builder(application)
         if builder.handle() != 0:
             event.stop_propagation()
