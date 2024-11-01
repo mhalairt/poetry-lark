@@ -4,7 +4,7 @@ import pytest
 import sys
 
 from cleo.testers.command_tester import CommandTester
-from poetry_lark.commands.remove import LarkStandaloneRemove
+from poetry_lark.commands.lark.remove import LarkStandaloneRemove
 
 from tests.heplers import configure_pyproject
 

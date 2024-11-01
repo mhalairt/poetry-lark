@@ -3,7 +3,7 @@
 import pytest
 
 from cleo.testers.command_tester import CommandTester
-from poetry_lark.commands.build import LarkStandaloneBuild
+from poetry_lark.commands.lark.build import LarkStandaloneBuild
 
 from tests.heplers import configure_build
 

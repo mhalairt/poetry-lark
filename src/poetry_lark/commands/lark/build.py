@@ -3,7 +3,7 @@
 from lark.tools.standalone import gen_standalone
 from lark import Lark
 
-from poetry_lark.command import LarkStandaloneCommand
+from poetry_lark.commands.command import LarkStandaloneCommand
 
 
 class LarkStandaloneBuild(LarkStandaloneCommand):

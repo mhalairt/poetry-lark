@@ -91,6 +91,12 @@ class Parser(NamedTuple):
         )):
             raise ValueError
 
+        if not cls._validate_module_name(module):
+            raise ValueError
+
+        if start is not None and not cls._validate_start_symbols(start):
+            raise ValueError
+
         for flag in (
             autobuild,
             enable_compress,
@@ -103,15 +109,6 @@ class Parser(NamedTuple):
         ):
             if flag not in (True, False, None):
                 raise ValueError
-
-        for segment in module.split('.'):
-            if not match(r'^[a-z][\w]*$', segment, IGNORECASE):
-                raise ValueError
-
-        if start is not None:
-            for rule in start:
-                if not isinstance(rule, str) or not match(r'^[a-z][_a-z0-9]*$', rule):
-                    raise ValueError
 
         options = cls._options(
             root=root,
@@ -130,6 +127,32 @@ class Parser(NamedTuple):
         return cls(module, source, **options)
 
     @classmethod
+    def _validate_module_name(cls, value: str) -> bool:
+        """
+        Validate a module name.
+
+        Arguments:
+            value: Module name.
+        """
+        return all(
+            match(r'^[a-z][\w]*$', segment, IGNORECASE)
+            for segment in value.split('.')
+        )
+
+    @classmethod
+    def _validate_start_symbols(cls, values: List[str]) -> bool:
+        """
+        Validate an array of start symbols.
+
+        Arguments:
+            values: Start symbols.
+        """
+        return all(
+            isinstance(symbol, str) and match(r'^[a-z][_a-z0-9]*$', symbol)
+            for symbol in values
+        )
+
+    @classmethod
     def _is_significant(cls, field: str, value: Any) -> bool:
         """
         Check if a field's value is significant.
@@ -138,22 +161,18 @@ class Parser(NamedTuple):
             field: Field name.
             value: Field value.
         """
-        if field not in cls._fields or value is None:
-            return False
-        if field in cls._field_defaults:
-            return value != cls._field_defaults.get(field)
-        return True
+        return field in cls._fields and value is not None and value != cls._field_defaults.get(field)
 
     @classmethod
-    def _options(cls, **data: Dict[str, Any]) -> Dict[str, Any]:
+    def _options(cls, **options: Dict[str, Any]) -> Dict[str, Any]:
         """
         Construct optional parameters.
 
         Arguments:
-            data: Dictionary of parameters.
+            options: Dictionary of parameters.
         """
         return {
-            field: value for field, value in data.items()
+            field: value for field, value in options.items()
             if cls._is_significant(field, value)
         }
 
@@ -175,13 +194,13 @@ class ParserSerializer:
         module = inline_table()
 
         module.update({
-            key: parser.data.get(source)
-            for source, key in (
+            key: parser.data.get(field)
+            for field, key in (
                 ('module', 'expose'),
                 ('root', 'from'),
                 ('autobuild', 'auto-build'),
             )
-            if source in parser.data
+            if field in parser.data
         })
 
         return module
@@ -195,8 +214,8 @@ class ParserSerializer:
             parser: The parser instance.
         """
         options = {
-            source.replace('_', '-'): parser.data.get(source)
-            for source in (
+            field.replace('_', '-'): parser.data.get(field)
+            for field in (
                 'source',
                 'start',
                 'lexer',
@@ -208,7 +227,7 @@ class ParserSerializer:
                 'use_regex',
                 'use_strict',
             )
-            if source in parser.data
+            if field in parser.data
         }
 
         return item({
@@ -221,43 +240,42 @@ class ParserLoader:
     """Loader for parsers from a configuration."""
 
     @classmethod
-    def load_module(cls, data: Optional[Union[str, Dict[str, Any]]]) -> Dict[str, Any]:
+    def load_module(cls, config: Optional[Union[str, Dict[str, Any]]]) -> Dict[str, Any]:
         """
         Load the parser module.
 
         Arguments:
             data: Parser data from the configuration.
         """
-        if isinstance(data, str):
-            return {'module': data}
+        if isinstance(config, str):
+            return {'module': config}
 
-        if isinstance(data, dict):
+        elif isinstance(config, dict):
             return {
-                source: data.get(key)
-                for source, key in (
+                field: config.get(key)
+                for field, key in (
                     ('module', 'expose'),
                     ('root', 'from'),
                     ('autobuild', 'auto-build'),
                 )
-                if key in data
             }
 
         return {}
 
     @classmethod
-    def load(cls, data: Dict[str, Any]) -> Parser:
+    def load(cls, config: Dict[str, Any]) -> Parser:
         """
         Load the parser.
 
         Arguments:
-            data: Parser data from the configuration.
+            config: Parser data from the configuration.
 
         Raises:
             ValueError: If validation fails.
         """
         options = {
-            source: data.get(source.replace('_', '-'))
-            for source in (
+            field: config.get(field.replace('_', '-'))
+            for field in (
                 'source',
                 'start',
                 'lexer',
@@ -272,7 +290,7 @@ class ParserLoader:
         }
 
         return Parser.create(
-            **cls.load_module(data.get('module')),
+            **cls.load_module(config.get('module')),
             **options,
         )
 

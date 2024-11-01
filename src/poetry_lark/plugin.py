@@ -11,9 +11,9 @@ from poetry.plugins.application_plugin import ApplicationPlugin
 
 from typing import List
 
-from poetry_lark.commands.build import LarkStandaloneBuild
-from poetry_lark.commands.add import LarkStandaloneAdd
-from poetry_lark.commands.remove import LarkStandaloneRemove
+from poetry_lark.commands.lark.build import LarkStandaloneBuild
+from poetry_lark.commands.lark.add import LarkStandaloneAdd
+from poetry_lark.commands.lark.remove import LarkStandaloneRemove
 
 
 class LarkStandalonePlugin(ApplicationPlugin):

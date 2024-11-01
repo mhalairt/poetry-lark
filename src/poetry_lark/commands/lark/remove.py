@@ -2,7 +2,7 @@
 
 from cleo.helpers import argument
 
-from poetry_lark.command import LarkStandaloneCommand
+from poetry_lark.commands.command import LarkStandaloneCommand
 
 
 class LarkStandaloneRemove(LarkStandaloneCommand):

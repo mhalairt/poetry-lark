@@ -3,7 +3,7 @@
 from cleo.helpers import argument
 from cleo.helpers import option
 
-from poetry_lark.command import LarkStandaloneCommand
+from poetry_lark.commands.command import LarkStandaloneCommand
 from poetry_lark.toml import Parser
 
 
