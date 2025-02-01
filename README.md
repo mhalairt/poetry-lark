@@ -6,7 +6,10 @@
 
     $ poetry self add poetry-lark
 
-The plugin depends only on Lark and Poetry, but you can use Lark's extra features: `interegular` (if it is installed, Lark uses it to check for collisions, and warn about any conflicts that it can find) and `regex` (if you want to use the `regex` module instead of the `re` module).
+The plugin depends only on Lark and Poetry, but you can use Lark's extra features: 
+
+- `interegular` (if it is installed, Lark uses it to check for collisions, and warn about any conflicts that it can find)
+- `regex` (if you want to use the `regex` module instead of the `re` module).
 
 ## Usage
 

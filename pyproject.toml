@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "poetry-lark"
-version = "1.0.3"
+version = "1.0.4"
 description = "Plugin which integrates Lark into the Poetry build system."
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -36,10 +36,16 @@ interegular = ["interegular"]
 [tool.poetry.plugins."poetry.application.plugin"]
 lark-standalone = "poetry_lark.plugin:LarkStandalonePlugin"
 
+[tool.poetry.group.test]
+optional = true
+
 [tool.poetry.group.test.dependencies]
 pytest = "^8.3.3"
 pytest-cov = "^5.0.0"
 pytest-mock = "^3.14.0"
+
+[tool.poetry.group.dev]
+optional = true
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^7.1.1"
