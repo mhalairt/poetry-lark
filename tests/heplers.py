@@ -3,13 +3,17 @@
 from contextlib import contextmanager
 from io import StringIO
 from pathlib import Path
+from typing import TYPE_CHECKING
+
 from poetry.poetry import Poetry
-from pytest_mock import MockerFixture
 from tomlkit import loads
+
+if TYPE_CHECKING:
+    from pytest_mock import MockerFixture
 
 
 @contextmanager
-def configure_pyproject(mocker: MockerFixture, config: str = ''):
+def configure_pyproject(mocker: 'MockerFixture', config: str = ''):
     """Mock pyproject.toml with initial data."""
     document = loads(config)
 
@@ -26,7 +30,7 @@ def configure_pyproject(mocker: MockerFixture, config: str = ''):
 
 
 @contextmanager
-def configure_build(mocker: MockerFixture, config: str = '', grammar: str = ''):
+def configure_build(mocker: 'MockerFixture', config: str = '', grammar: str = ''):
     """Mock builder."""
     out = StringIO(newline='\n')
 

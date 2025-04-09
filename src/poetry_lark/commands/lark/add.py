@@ -1,7 +1,6 @@
 """Command for adding a standalone parser."""
 
-from cleo.helpers import argument
-from cleo.helpers import option
+from cleo.helpers import argument, option
 
 from poetry_lark.commands.command import LarkStandaloneCommand
 from poetry_lark.toml import Parser

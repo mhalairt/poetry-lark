@@ -1,6 +1,7 @@
 """Base command."""
 
-from logging import getLogger, Logger
+from logging import Logger, getLogger
+
 from poetry.console.commands.command import Command
 
 from poetry_lark.toml import Parser, TOMLConfig

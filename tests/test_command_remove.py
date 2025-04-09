@@ -1,12 +1,13 @@
 """Tests for removing of the configurations."""
 
-import pytest
 import sys
 
-from cleo.testers.command_tester import CommandTester
-from poetry_lark.commands.lark.remove import LarkStandaloneRemove
+import pytest
 
+from cleo.testers.command_tester import CommandTester
 from tests.heplers import configure_pyproject
+
+from poetry_lark.commands.lark.remove import LarkStandaloneRemove
 
 
 @pytest.fixture

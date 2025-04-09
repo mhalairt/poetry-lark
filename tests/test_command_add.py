@@ -3,9 +3,9 @@
 import pytest
 
 from cleo.testers.command_tester import CommandTester
-from poetry_lark.commands.lark.add import LarkStandaloneAdd
-
 from tests.heplers import configure_pyproject
+
+from poetry_lark.commands.lark.add import LarkStandaloneAdd
 
 
 @pytest.fixture

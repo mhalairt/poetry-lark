@@ -1,5 +1,4 @@
-"""
-"""
+"""Test for plugin."""
 
 import pytest
 
@@ -13,9 +12,18 @@ from tests.heplers import configure_build
 @pytest.fixture
 def tester() -> ApplicationTester:
     """Command's tester."""
-    return ApplicationTester(
-        Application(),
-    )
+    from poetry.plugins.application_plugin import ApplicationPlugin
+    from poetry.plugins.plugin_manager import PluginManager
+
+    from poetry_lark.plugin import LarkStandalonePlugin
+
+    manager = PluginManager(ApplicationPlugin.group)
+    manager._add_plugin(LarkStandalonePlugin())
+
+    application = Application()
+    manager.activate(application)
+
+    return ApplicationTester(application)
 
 
 def test_success_build_hook(tester, mocker):

@@ -1,7 +1,7 @@
 """Command for building standalone parsers."""
 
-from lark.tools.standalone import gen_standalone
 from lark import Lark
+from lark.tools.standalone import gen_standalone
 
 from poetry_lark.commands.command import LarkStandaloneCommand
 

@@ -1,6 +1,7 @@
 """Tests for the configuration's model."""
 
 import pathlib
+
 import pytest
 
 from poetry_lark.toml import Parser

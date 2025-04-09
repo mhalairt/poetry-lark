@@ -1,13 +1,14 @@
 """Configurations."""
 
 from pathlib import Path
-from re import match, IGNORECASE
+from re import IGNORECASE, match
+from typing import TYPE_CHECKING, Any, Dict, List, Literal, NamedTuple, Optional, Union
+
 from tomlkit.api import aot, inline_table, item, table
 from tomlkit.items import Item, Table
-from tomlkit.toml_document import TOMLDocument
-from typing import NamedTuple
 
-from typing import Any, Dict, List, Literal, Optional, Union
+if TYPE_CHECKING:
+    from tomlkit.toml_document import TOMLDocument
 
 
 class Parser(NamedTuple):
@@ -298,7 +299,7 @@ class ParserLoader:
 class TOMLConfig:
     """Configuration."""
 
-    def __init__(self, document: TOMLDocument) -> None:
+    def __init__(self, document: 'TOMLDocument') -> None:
         """
         Initialize a new instance.
 

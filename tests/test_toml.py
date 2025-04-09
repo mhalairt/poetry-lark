@@ -2,8 +2,9 @@
 
 import pytest
 
+from tomlkit.api import dumps, loads
+
 from poetry_lark.toml import Parser, TOMLConfig
-from tomlkit.api import loads, dumps
 
 
 def test_success_read_empty():
